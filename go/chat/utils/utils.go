@@ -12,11 +12,10 @@ import (
 	"strings"
 	"time"
 
-	emoji "gopkg.in/kyokomi/emoji.v1"
-
 	"github.com/keybase/client/go/chat/pager"
 	"github.com/keybase/client/go/chat/unfurl/display"
 	"github.com/keybase/go-framed-msgpack-rpc/rpc"
+	"github.com/kyokomi/emoji"
 
 	"regexp"
 
