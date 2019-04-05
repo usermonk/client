@@ -17,6 +17,7 @@ import Errs from './errs'
 import OpenInSystemFileManager from './open-in-system-file-manager'
 import {type OwnProps as PathItemIconOwnProps} from './path-item-icon-container'
 import {type OwnProps as PathItemInfoOwnProps} from './path-item-info-container'
+import ReallyDelete from '../really-delete'
 
 const PathItemActionMenuHeaderProps = (props: any) => ({
   childrenFiles: 0,
@@ -154,6 +155,15 @@ const load = () => {
         />
       </Kb.Box2>
     ))
+
+  const reallyDeleteProps = {
+    name: 'Important Documents',
+    onBack: Sb.action('onBack'),
+    onLeave: Sb.action('onDelete'),
+    title: 'foo',
+  }
+  Sb.storiesOf('Files', module).add('Really Delete', () => <ReallyDelete {...reallyDeleteProps} />)
+
   Sb.storiesOf('Files', module)
     .addDecorator(provider)
     .add('Errs', () => (
