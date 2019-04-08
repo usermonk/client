@@ -41,12 +41,10 @@ export const makeNewFolder: I.RecordFactory<Types._NewFolder> = I.Record({
 export const emptyFolder = makeNewFolder()
 
 const pathItemMetadataDefault = {
-  badgeCount: 0,
   lastModifiedTimestamp: 0,
-  lastWriter: {uid: '', username: ''},
+  lastWriter: '',
   name: 'unknown',
   size: 0,
-  tlfMeta: undefined,
   writable: false,
 }
 

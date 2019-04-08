@@ -36,7 +36,7 @@ const loadFavorites = (state, action) =>
 
 const direntToMetadata = (d: RPCTypes.Dirent) => ({
   lastModifiedTimestamp: d.time,
-  lastWriter: d.lastWriterUnverified,
+  lastWriter: d.lastWriterUnverified.username,
   name: d.name.split('/').pop(),
   size: d.size,
   writable: d.writable,
