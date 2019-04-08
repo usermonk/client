@@ -159,7 +159,7 @@ const load = () => {
   const reallyDeleteProps = {
     name: 'Important Documents',
     onBack: Sb.action('onBack'),
-    onLeave: Sb.action('onDelete'),
+    onDelete: Sb.action('onDelete'),
     title: 'foo',
   }
   Sb.storiesOf('Files', module).add('Really Delete', () => <ReallyDelete {...reallyDeleteProps} />)

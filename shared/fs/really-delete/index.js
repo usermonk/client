@@ -6,7 +6,7 @@ import {globalStyles, globalMargins} from '../../styles'
 
 export type Props = {
   onBack: () => void,
-  onLeave: () => void,
+  onDelete: () => void,
   name: string,
   title: string,
 }
@@ -26,11 +26,13 @@ const Header = (props: Props) => <Icon type="iconfont-trash" sizeType="Big" />
 
 const _ReallyDeleteFile = (props: Props) => (
   <ConfirmModal
-    confirmText={`Yes, delete ${props.name}`}
+    confirmText={`Yes, delete it.`}
+    // TODO: this is technically false, in that time travel exists. Change
+    //  this text, probably?
     description={`There's no trash can - "${props.name}" will be gone forever.`}
     header={<Header {...props} />}
     onCancel={props.onBack}
-    onConfirm={props.onLeave}
+    onConfirm={props.onDelete}
     prompt={`Are you sure you want to delete "${props.name}"?`}
     waitingKey={Constants.deleteFolderWaitingKey(props.name)}
   />
