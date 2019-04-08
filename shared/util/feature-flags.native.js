@@ -13,12 +13,12 @@ const ff: FeatureFlags = {
   dbCleanEnabled: false,
   folderViewFilter: false,
   foldersInProfileTab: false,
-  moveOrCopy: true,
+  moveOrCopy: false,
   newTeamBuildingForChatAllowMakeTeam: false,
   outOfDateBanner: false,
   plansEnabled: false,
   proofProviders: true,
-  sendAttachmentToChat: true,
+  sendAttachmentToChat: false,
   useNewRouter: false,
 }
 
