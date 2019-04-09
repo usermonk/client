@@ -13,13 +13,15 @@ import (
 	"github.com/keybase/client/go/launchd"
 	"github.com/keybase/client/go/libcmdline"
 	"github.com/keybase/client/go/libkb"
+	"github.com/keybase/client/go/protocol/keybase1"
+	"golang.org/x/net/context"
 )
 
 // NewCmdCtlStop constructs ctl start command
 func NewCmdCtlStop(cl *libcmdline.CommandLine, g *libkb.GlobalContext) cli.Command {
 	return cli.Command{
 		Name:  "stop",
-		Usage: "Stop the app and services",
+		Usage: "Stop Keybase",
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "include",
@@ -31,7 +33,7 @@ func NewCmdCtlStop(cl *libcmdline.CommandLine, g *libkb.GlobalContext) cli.Comma
 			},
 			cli.BoolFlag{
 				Name:  "shutdown",
-				Usage: "tell the service to shutdown, and do nothing else",
+				Usage: "Only shutdown the service",
 			},
 		},
 		Action: func(c *cli.Context) {
@@ -70,24 +72,28 @@ func ctlStop(g *libkb.GlobalContext, components map[string]bool) error {
 	if libkb.IsBrewBuild {
 		return ctlBrewStop(g)
 	}
-	g.Log.Debug("Components: %v", components)
+	g.Log.Info("Components: %v", components)
 	errs := []error{}
 	if ok := components[install.ComponentNameApp.String()]; ok {
+		g.Log.Info("stop cli; app")
 		if err := install.TerminateApp(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameService.String()]; ok {
+		g.Log.Info("stop cli; service")
 		if err := install.UninstallKeybaseServices(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameKBFS.String()]; ok {
+		g.Log.Info("stop cli; kbfs")
 		if err := install.UninstallKBFSOnStop(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameUpdater.String()]; ok {
+		g.Log.Info("stop cli; updater")
 		if err := install.UninstallUpdaterService(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
@@ -96,9 +102,12 @@ func ctlStop(g *libkb.GlobalContext, components map[string]bool) error {
 }
 
 func (s *CmdCtlStop) Run() error {
-	// For this flag, just stop the service, and don't do anything else.
 	if s.shutdown {
-		return CtlServiceStop(s.G())
+		cli, err := GetCtlClient(s.G())
+		if err != nil {
+			return err
+		}
+		return cli.StopService(context.TODO(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
 	}
 	return ctlStop(s.G(), s.components)
 }

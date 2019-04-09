@@ -891,6 +891,7 @@ func UninstallKBFSOnStop(context Context, log Log) error {
 	if err != nil {
 		return err
 	}
+	log.Info("UninstallKBFSOnStop: mountdir=%s", mountDir)
 
 	if err := UninstallKBFS(context, mountDir, false, log); err != nil {
 		return err

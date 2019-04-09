@@ -39,6 +39,9 @@ const mapDispatchToProps = dispatch => ({
     tab && dispatch(RouteTreeGen.createSwitchTo({path: [tab]}))
   },
   quit: () => {
+    if (!__DEV__) {
+      dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+    }
     closeWindow()
     dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
     // In case dump log doens't exit for us

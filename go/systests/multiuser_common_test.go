@@ -65,7 +65,7 @@ func (u *smuUser) cleanup() {
 	for _, d := range u.devices {
 		d.tctx.Cleanup()
 		if d.service != nil {
-			d.service.Stop(0)
+			CtlStop(d.tctx.G)
 			d.stop()
 		}
 	}

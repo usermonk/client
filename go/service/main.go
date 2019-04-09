@@ -1064,10 +1064,6 @@ func (d *Service) ConfigRPCServer() (net.Listener, error) {
 	return listener, nil
 }
 
-func (d *Service) Stop(exitCode keybase1.ExitCode) {
-	d.stopCh <- exitCode
-}
-
 func (d *Service) ListenLoopWithStopper(l net.Listener) (exitCode keybase1.ExitCode, err error) {
 	ch := make(chan error)
 	go func() {
