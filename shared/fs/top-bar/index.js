@@ -9,6 +9,7 @@ import Sort from './sort-container'
 
 type Props = {|
   path: Types.Path,
+  mode?: 'offline' | 'default',
 |}
 
 const TopBar = (props: Props) => (
@@ -22,7 +23,7 @@ const TopBar = (props: Props) => (
   >
     <Loading path={props.path} />
     <Kb.Box style={styles.flex} />
-    <Sort path={props.path} />
+    {props.mode !== 'offline' && <Sort path={props.path} />}
   </Kb.Box2>
 )
 
