@@ -105,5 +105,5 @@ func CtlStop(g *libkb.GlobalContext) error {
 	if err != nil {
 		return err
 	}
-	return cli.StopService(context.TODO(), keybase1.StopServiceArg{SessionID: 0, ExitCode: keybase1.ExitCode_OK})
+	return cli.StopService(context.TODO(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
 }
