@@ -37,7 +37,9 @@ func (c *CtlHandler) Stop(ctx context.Context, args keybase1.StopArg) error {
 
 func (c *CtlHandler) StopService(ctx context.Context, args keybase1.StopServiceArg) error {
 	c.G().Log.Info("Ctl: StopService")
-	c.service.stopCh <- args.ExitCode
+	go func() {
+		c.service.stopCh <- args.ExitCode
+	}()
 	return nil
 }
 
