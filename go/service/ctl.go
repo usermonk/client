@@ -31,7 +31,7 @@ func (c *CtlHandler) Stop(ctx context.Context, args keybase1.StopArg) error {
 	c.G().Log.Info("Ctl: Stop")
 	install.StopAllButService(libkb.NewMetaContext(ctx, c.G()))
 	c.G().Log.Info("Ctl: Stopping service")
-	c.StopService(ctx, keybase1.StopServiceArg{SessionID: args.SessionID, ExitCode: args.ExitCode})
+	c.StopService(ctx, keybase1.StopServiceArg{ExitCode: args.ExitCode})
 	return nil
 }
 

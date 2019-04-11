@@ -72,28 +72,24 @@ func ctlStop(g *libkb.GlobalContext, components map[string]bool) error {
 	if libkb.IsBrewBuild {
 		return ctlBrewStop(g)
 	}
-	g.Log.Info("Components: %v", components)
+	g.Log.Debug("ctlStop: Components: %v", components)
 	errs := []error{}
 	if ok := components[install.ComponentNameApp.String()]; ok {
-		g.Log.Info("stop cli; app")
 		if err := install.TerminateApp(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameService.String()]; ok {
-		g.Log.Info("stop cli; service")
 		if err := install.UninstallKeybaseServices(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameKBFS.String()]; ok {
-		g.Log.Info("stop cli; kbfs")
 		if err := install.UninstallKBFSOnStop(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}
 	}
 	if ok := components[install.ComponentNameUpdater.String()]; ok {
-		g.Log.Info("stop cli; updater")
 		if err := install.UninstallUpdaterService(g, g.Log); err != nil {
 			errs = append(errs, err)
 		}

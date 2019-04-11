@@ -10,6 +10,7 @@ import * as TrackerConstants from '../../constants/tracker2'
 import TabBar from '.'
 import {connect} from '../../util/container'
 import {memoize} from '../../util/memoize'
+import {quit} from '../../util/quit-helper'
 import openURL from '../../util/open-url'
 
 type OwnProps = {|
@@ -33,8 +34,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   onHelp: () => openURL('https://keybase.io/docs'),
   onQuit: () => {
-    dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+    if (!__DEV__) {
+      dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+    }
     dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
+    setTimeout(() => {
+      quit('quitButton')
+    }, 1000)
   },
   onSettings: () => dispatch(RouteTreeGen.createNavigateAppend({path: [Tabs.settingsTab]})),
   onSignOut: () => dispatch(ConfigGen.createLogout()),

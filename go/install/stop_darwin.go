@@ -10,17 +10,29 @@ import (
 
 func StopAllButService(mctx libkb.MetaContext) {
 	g := mctx.G()
-	mctx.Info("+ StopAllButService")
+	mctx.Debug("+ StopAllButService")
 	if libkb.IsBrewBuild {
 		launchd.Stop(DefaultServiceLabel(g.Env.GetRunMode()), defaultLaunchdWait, g.Log)
 	}
-	mctx.Info("StopAllButService: Terminating app")
-	TerminateApp(g, g.Log)
-	mctx.Info("StopAllButService: Terminating KBFS")
-	UninstallKBFSOnStop(g, g.Log)
-	mctx.Info("StopAllButService: Terminating updater")
-	UninstallUpdaterService(g, g.Log)
-	mctx.Info("StopAllButService: Terminating Keybase services")
-	UninstallKeybaseServices(g, g.Log)
-	mctx.Info("- StopAllButService")
+	mctx.Debug("StopAllButService: Terminating app")
+	err := TerminateApp(g, g.Log)
+	if err != nil {
+		mctx.Debug(err.Error())
+	}
+	mctx.Debug("StopAllButService: Terminating KBFS")
+	err = UninstallKBFSOnStop(g, g.Log)
+	if err != nil {
+		mctx.Debug(err.Error())
+	}
+	mctx.Debug("StopAllButService: Terminating updater")
+	err = UninstallUpdaterService(g, g.Log)
+	if err != nil {
+		mctx.Debug(err.Error())
+	}
+	mctx.Debug("StopAllButService: Terminating Keybase services")
+	err = UninstallKeybaseServices(g, g.Log)
+	if err != nil {
+		mctx.Debug(err.Error())
+	}
+	mctx.Debug("- StopAllButService")
 }

@@ -13,6 +13,8 @@ import * as SafeElectron from '../util/safe-electron.desktop'
 import * as FsConstants from '../constants/fs'
 import {urlHelper} from '../util/url-helper'
 import {isWindows, isDarwin} from '../constants/platform'
+import * as RPCTypes from '../constants/types/rpc-gen'
+import * as SettingsGen from '../actions/settings-gen'
 
 const closeWindow = () => {
   SafeElectron.getRemote()
