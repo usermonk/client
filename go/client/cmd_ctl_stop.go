@@ -50,7 +50,7 @@ func (s *CmdCtlStop) ParseArgv(ctx *cli.Context) error {
 func (s *CmdCtlStop) Run() (err error) {
 	mctx := libkb.NewMetaContextTODO(s.G())
 	if !s.shutdown {
-		install.StopAllButService(mctx)
+		install.StopAllButService(mctx, keybase1.ExitCode_OK)
 	}
 	cli, err := GetCtlClient(s.G())
 	if err != nil {
