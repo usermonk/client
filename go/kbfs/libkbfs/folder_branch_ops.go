@@ -8331,6 +8331,20 @@ func (fbo *folderBranchOps) GetSyncConfig(
 
 	lState := makeFBOLockState()
 	md, _ := fbo.getHead(ctx, lState, mdNoCommit)
+	var once sync.Once
+	for md == (ImmutableRootMetadata{}) {
+		once.Do(func() {
+			fbo.log.CDebugf(ctx,
+				"Waiting for head to be populated while getting sync config")
+		})
+		t := time.After(100 * time.Millisecond)
+		select {
+		case <-t:
+		case <-ctx.Done():
+			return keybase1.FolderSyncConfig{}, ctx.Err()
+		}
+		md, _ = fbo.getHead(ctx, lState, mdNoCommit)
+	}
 	config, tlfPath, err := fbo.getProtocolSyncConfigUnlocked(ctx, lState, md)
 	if err != nil {
 		return keybase1.FolderSyncConfig{}, err
