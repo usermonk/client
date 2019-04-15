@@ -12,7 +12,7 @@ import * as RouteTreeGen from '../actions/route-tree-gen'
 import * as SafeElectron from '../util/safe-electron.desktop'
 import * as FsConstants from '../constants/fs'
 import {urlHelper} from '../util/url-helper'
-import {isWindows, isDarwin} from '../constants/platform'
+import {isWindows, isDarwin, isLinux} from '../constants/platform'
 import * as RPCTypes from '../constants/types/rpc-gen'
 import * as SettingsGen from '../actions/settings-gen'
 
@@ -41,12 +41,14 @@ const mapDispatchToProps = dispatch => ({
     tab && dispatch(RouteTreeGen.createSwitchTo({path: [tab]}))
   },
   quit: () => {
-    if (!__DEV__) {
+    if (isLinux) {
       dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+    } else {
+      dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
     }
+
+    // In case dump log doesn't exit for us
     closeWindow()
-    dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
-    // In case dump log doens't exit for us
     setTimeout(() => {
       executeActionsForContext('quitButton')
     }, 2000)

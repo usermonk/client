@@ -6,6 +6,8 @@
 package client
 
 import (
+	"runtime"
+
 	"github.com/keybase/cli"
 	"github.com/keybase/client/go/install"
 	"github.com/keybase/client/go/libcmdline"
@@ -49,14 +51,30 @@ func (s *CmdCtlStop) ParseArgv(ctx *cli.Context) error {
 
 func (s *CmdCtlStop) Run() (err error) {
 	mctx := libkb.NewMetaContextTODO(s.G())
-	if !s.shutdown {
-		install.StopAllButService(mctx, keybase1.ExitCode_OK)
+
+	switch runtime.GOOS {
+	case "windows":
+		if !s.shutdown {
+			install.StopAllButService(mctx, keybase1.ExitCode_OK)
+		}
+		cli, err := GetCtlClient(s.G())
+		if err != nil {
+			return err
+		}
+		return cli.StopService(mctx.Ctx(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
+	default:
+		// On Linux, StopAllButService depends on a running service to tell it
+		// what clients to shut down, so we can't call it directly from here,
+		// but need to go through the RPC first.
+		cli, err := GetCtlClient(s.G())
+		if err != nil {
+			return err
+		}
+		if s.shutdown {
+			return cli.StopService(mctx.Ctx(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
+		}
+		return cli.Stop(mctx.Ctx(), keybase1.StopArg{ExitCode: keybase1.ExitCode_OK})
 	}
-	cli, err := GetCtlClient(s.G())
-	if err != nil {
-		return err
-	}
-	return cli.StopService(mctx.Ctx(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
 }
 
 func (s *CmdCtlStop) GetUsage() libkb.Usage {

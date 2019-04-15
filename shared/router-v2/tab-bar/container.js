@@ -3,15 +3,16 @@ import * as Tabs from '../../constants/tabs'
 import * as ConfigGen from '../../actions/config-gen'
 import * as ProfileGen from '../../actions/profile-gen'
 import * as PeopleGen from '../../actions/people-gen'
-import * as RPCTypes from '../../constants/types/rpc-gen'
 import * as RouteTreeGen from '../../actions/route-tree-gen'
-import * as SettingsGen from '../../actions/settings-gen'
 import * as TrackerConstants from '../../constants/tracker2'
 import TabBar from '.'
 import {connect} from '../../util/container'
 import {memoize} from '../../util/memoize'
-import {quit} from '../../util/quit-helper'
+import {isLinux} from '../../constants/platform'
 import openURL from '../../util/open-url'
+import {executeActionsForContext} from '../../util/quit-helper.desktop'
+import * as RPCTypes from '../../constants/types/rpc-gen'
+import * as SettingsGen from '../../actions/settings-gen'
 
 type OwnProps = {|
   selectedTab: Tabs.Tab,
@@ -34,13 +35,16 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   onHelp: () => openURL('https://keybase.io/docs'),
   onQuit: () => {
-    if (!__DEV__) {
+    if (isLinux) {
       dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+    } else {
+      dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
     }
-    dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
+
+    // In case dump log doesn't exit for us
     setTimeout(() => {
-      quit('quitButton')
-    }, 1000)
+      executeActionsForContext('quitButton')
+    }, 2000)
   },
   onSettings: () => dispatch(RouteTreeGen.createNavigateAppend({path: [Tabs.settingsTab]})),
   onSignOut: () => dispatch(ConfigGen.createLogout()),
