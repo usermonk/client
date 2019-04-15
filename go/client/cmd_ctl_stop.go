@@ -7,10 +7,10 @@ package client
 
 import (
 	"github.com/keybase/cli"
+	"github.com/keybase/client/go/install"
 	"github.com/keybase/client/go/libcmdline"
 	"github.com/keybase/client/go/libkb"
 	"github.com/keybase/client/go/protocol/keybase1"
-	"golang.org/x/net/context"
 )
 
 func NewCmdCtlStop(cl *libcmdline.CommandLine, g *libkb.GlobalContext) cli.Command {
@@ -48,16 +48,15 @@ func (s *CmdCtlStop) ParseArgv(ctx *cli.Context) error {
 }
 
 func (s *CmdCtlStop) Run() (err error) {
+	mctx := libkb.NewMetaContextTODO(s.G())
+	if !s.shutdown {
+		install.StopAllButService(mctx)
+	}
 	cli, err := GetCtlClient(s.G())
 	if err != nil {
 		return err
 	}
-	ctx := context.TODO()
-	if s.shutdown {
-		return cli.StopService(ctx, keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
-	}
-	return cli.Stop(ctx, keybase1.StopArg{ExitCode: keybase1.ExitCode_OK})
-
+	return cli.StopService(mctx.Ctx(), keybase1.StopServiceArg{ExitCode: keybase1.ExitCode_OK})
 }
 
 func (s *CmdCtlStop) GetUsage() libkb.Usage {
