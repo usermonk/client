@@ -7,7 +7,7 @@ import (
 	"github.com/keybase/client/go/libkb"
 )
 
-func StopAllButService(mctx libkb.MetaContext) {
+func StopAllButService(mctx libkb.MetaContext, _ keybase1.ExitCode) {
 	mountdir, err := mctx.G().Env.GetMountDir()
 	if err != nil {
 		mctx.Error("StopAllButService: Error in GetCurrentMountDir: %s", err.Error())

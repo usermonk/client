@@ -8,7 +8,7 @@ import (
 	"github.com/keybase/client/go/libkb"
 )
 
-func StopAllButService(mctx libkb.MetaContext) {
+func StopAllButService(mctx libkb.MetaContext, _ keybase1.ExitCode) {
 	g := mctx.G()
 	mctx.Debug("+ StopAllButService")
 	if libkb.IsBrewBuild {
