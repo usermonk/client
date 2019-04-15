@@ -41,10 +41,12 @@ const mapDispatchToProps = dispatch => ({
     tab && dispatch(RouteTreeGen.createSwitchTo({path: [tab]}))
   },
   quit: () => {
-    if (isLinux) {
-      dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
-    } else {
-      dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
+    if (!__DEV__) {
+      if (isLinux) {
+        dispatch(SettingsGen.createStop({exitCode: RPCTypes.ctlExitCode.ok}))
+      } else {
+        dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
+      }
     }
 
     // In case dump log doesn't exit for us

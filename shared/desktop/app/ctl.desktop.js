@@ -35,11 +35,11 @@ function exitProcess() {
 }
 
 export function quit(appOnly: boolean = false) {
-  // if (appOnly || __DEV__) {
-  //   console.log('Only quitting gui')
-  //   exitApp()
-  //   return
-  // }
+  if (appOnly || __DEV__) {
+    console.log('Only quitting gui')
+    exitApp()
+    return
+  }
 
   console.log('Quit the app')
   ctlStop(function(stopErr) {
