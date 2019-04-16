@@ -10,7 +10,7 @@ import {connect} from '../../util/container'
 import {memoize} from '../../util/memoize'
 import {isLinux} from '../../constants/platform'
 import openURL from '../../util/open-url'
-import {executeActionsForContext} from '../../util/quit-helper.desktop'
+import {quit, hideWindow} from '../../util/quit-helper'
 import * as RPCTypes from '../../constants/types/rpc-gen'
 import * as SettingsGen from '../../actions/settings-gen'
 
@@ -42,10 +42,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
         dispatch(ConfigGen.createDumpLogs({reason: 'quitting through menu'}))
       }
     }
-
     // In case dump log doesn't exit for us
+    hideWindow()
     setTimeout(() => {
-      executeActionsForContext('quitButton')
+      quit('quitButton')
     }, 2000)
   },
   onSettings: () => dispatch(RouteTreeGen.createNavigateAppend({path: [Tabs.settingsTab]})),
