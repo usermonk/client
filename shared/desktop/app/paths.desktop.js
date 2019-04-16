@@ -48,7 +48,6 @@ export function keybaseBinPath() {
     }
     return path.resolve(String(kbPath), 'Keybase', 'keybase.exe')
   }
-  if (os.platform() === 'linux') return '/usr/bin/keybase'
   if (os.platform() !== 'darwin') return null
   const bundlePath = appBundlePath()
   if (bundlePath === null) return null
